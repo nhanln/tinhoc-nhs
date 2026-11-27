@@ -242,6 +242,9 @@
           <button onclick="createNewRoom()" class="px-4 py-2.5 bg-teal-600 hover:bg-teal-500 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow transition cursor-pointer">
             ➕ Tạo phòng mới (6 ký tự)
           </button>
+          <button id="btn-end-session" onclick="endRoomSession()" class="hidden px-3.5 py-2.5 bg-navy-800 hover:bg-navy-700 text-amber-300 font-extrabold text-xs sm:text-sm rounded-xl border border-amber-400/50 shadow transition cursor-pointer">
+            ⏹ Kết thúc thi
+          </button>
           <button id="btn-toggle-lock" onclick="toggleRoomLock()" class="hidden px-3.5 py-2.5 bg-amber-500 hover:bg-amber-400 text-navy-900 font-extrabold text-xs sm:text-sm rounded-xl shadow transition cursor-pointer">
             🔓 Đang mở nhận bài
           </button>
@@ -249,6 +252,12 @@
             🗑️ Đặt lại phòng
           </button>
         </div>
+      </div>
+
+      <!-- Thông báo trạng thái phiên làm bài của phòng -->
+      <div id="teacher-session-banner" class="hidden p-3 rounded-xl bg-amber-50 border border-amber-300 text-xs sm:text-sm font-bold text-navy-900 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <span id="teacher-session-status-text">Phiên làm bài đang diễn ra.</span>
+        <span id="teacher-session-countdown" class="font-mono text-coral-600"></span>
       </div>
 
       <!-- Khu vực hiển thị Mã phòng + QR Code sau khi GV tạo phòng -->
@@ -1239,6 +1248,10 @@ h1 { text-align: left; color: red; }
       roomCode: isQrStudentMode ? paramRoom : '',
       scope: isQrStudentMode ? paramScope : 'b13_all',
       isLocked: false,
+      isEnded: false,
+      sessionDurationSec: 600,
+      sessionRemainingSec: 0,
+      sessionEndsAt: 0,
       studentId: '',
       studentName: '',
       studentGroup: '',
@@ -1255,6 +1268,146 @@ h1 { text-align: left; color: red; }
       unsubscribeRoom: null,
       unsubscribeStudents: null,
       latestStudentsList: []
+    };
+
+    let teacherSessionTimer = null;
+
+    function formatClockMMSS(totalSec) {
+      const safe = Math.max(0, Math.floor(totalSec || 0));
+      const mm = Math.floor(safe / 60).toString().padStart(2, '0');
+      const ss = (safe % 60).toString().padStart(2, '0');
+      return `${mm}:${ss}`;
+    }
+
+    function updateTeacherSessionUI() {
+      if (isQrStudentMode) return;
+      const banner = document.getElementById('teacher-session-banner');
+      const statusText = document.getElementById('teacher-session-status-text');
+      const countdownEl = document.getElementById('teacher-session-countdown');
+      const btnCreate = document.querySelector('button[onclick="createNewRoom()"]');
+      const btnEnd = document.getElementById('btn-end-session');
+
+      if (!classroomState.roomCode) {
+        if (banner) banner.classList.add('hidden');
+        if (btnEnd) btnEnd.classList.add('hidden');
+        if (btnCreate) {
+          btnCreate.disabled = false;
+          btnCreate.classList.remove('opacity-50', 'cursor-not-allowed');
+          btnCreate.textContent = '➕ Tạo phòng mới (6 ký tự)';
+        }
+        return;
+      }
+
+      if (banner) banner.classList.remove('hidden');
+      if (btnEnd) btnEnd.classList.remove('hidden');
+
+      const sessionActive = !classroomState.isEnded && classroomState.sessionRemainingSec > 0;
+      if (sessionActive) {
+        if (statusText) {
+          statusText.textContent = `⏳ Phòng ${classroomState.roomCode} đang diễn ra phiên thi/làm bài — Chỉ có thể tạo phòng mới khi hết giờ hoặc giáo viên bấm "Kết thúc thi".`;
+        }
+        if (countdownEl) {
+          countdownEl.textContent = `Còn lại: ${formatClockMMSS(classroomState.sessionRemainingSec)}`;
+        }
+        if (btnCreate) {
+          btnCreate.disabled = true;
+          btnCreate.classList.add('opacity-50', 'cursor-not-allowed');
+          btnCreate.textContent = '🔒 Đang diễn ra phiên thi';
+        }
+        if (btnEnd) {
+          btnEnd.disabled = false;
+          btnEnd.classList.remove('opacity-50', 'cursor-not-allowed');
+          btnEnd.textContent = '⏹ Kết thúc thi';
+        }
+      } else {
+        classroomState.isEnded = true;
+        classroomState.isLocked = true;
+        syncLockButtonUI();
+        if (statusText) {
+          statusText.textContent = `✅ Phòng ${classroomState.roomCode} đã kết thúc phiên thi / hết giờ làm bài. Thầy/Cô có thể bấm "Tạo phòng mới (6 ký tự)" ngay bây giờ.`;
+        }
+        if (countdownEl) {
+          countdownEl.textContent = '00:00 • Đã kết thúc';
+        }
+        if (btnCreate) {
+          btnCreate.disabled = false;
+          btnCreate.classList.remove('opacity-50', 'cursor-not-allowed');
+          btnCreate.textContent = '➕ Tạo phòng mới (6 ký tự)';
+        }
+        if (btnEnd) {
+          btnEnd.disabled = true;
+          btnEnd.classList.add('opacity-50', 'cursor-not-allowed');
+          btnEnd.textContent = '⏹ Đã kết thúc';
+        }
+      }
+    }
+
+    function startTeacherSessionCountdown(endsAtMs) {
+      if (teacherSessionTimer) {
+        clearInterval(teacherSessionTimer);
+        teacherSessionTimer = null;
+      }
+      const tick = async () => {
+        if (!classroomState.roomCode) return;
+        const rem = Math.max(0, Math.ceil((endsAtMs - Date.now()) / 1000));
+        classroomState.sessionRemainingSec = rem;
+        if (rem <= 0 && !classroomState.isEnded) {
+          classroomState.isEnded = true;
+          classroomState.isLocked = true;
+          const rec = readLocalRoomRecord(classroomState.roomCode);
+          rec.meta = {
+            ...(rec.meta || {}),
+            roomCode: classroomState.roomCode,
+            isEnded: true,
+            isLocked: true,
+            sessionRemainingSec: 0
+          };
+          writeLocalRoomRecord(classroomState.roomCode, rec);
+          if (db && currentUser) {
+            try {
+              const roomRef = doc(db, 'artifacts', appId, 'public', 'data', `room_meta_${classroomState.roomCode}`, 'info');
+              await updateDoc(roomRef, { isEnded: true, isLocked: true, sessionRemainingSec: 0 });
+            } catch (e) {}
+          }
+          clearInterval(teacherSessionTimer);
+          teacherSessionTimer = null;
+        }
+        updateTeacherSessionUI();
+      };
+      tick();
+      if (!classroomState.isEnded && classroomState.sessionRemainingSec > 0) {
+        teacherSessionTimer = setInterval(tick, 1000);
+      }
+    }
+
+    window.endRoomSession = async function() {
+      if (isQrStudentMode || !classroomState.roomCode) return;
+      classroomState.isEnded = true;
+      classroomState.isLocked = true;
+      classroomState.sessionRemainingSec = 0;
+      if (teacherSessionTimer) {
+        clearInterval(teacherSessionTimer);
+        teacherSessionTimer = null;
+      }
+
+      const rec = readLocalRoomRecord(classroomState.roomCode);
+      rec.meta = {
+        ...(rec.meta || {}),
+        roomCode: classroomState.roomCode,
+        isEnded: true,
+        isLocked: true,
+        sessionRemainingSec: 0
+      };
+      writeLocalRoomRecord(classroomState.roomCode, rec);
+      syncLockButtonUI();
+      updateTeacherSessionUI();
+
+      if (db && currentUser) {
+        try {
+          const roomRef = doc(db, 'artifacts', appId, 'public', 'data', `room_meta_${classroomState.roomCode}`, 'info');
+          await updateDoc(roomRef, { isEnded: true, isLocked: true, sessionRemainingSec: 0 });
+        } catch (e) {}
+      }
     };
 
     // Khóa lưu trữ cục bộ theo mã phòng (hỗ trợ chạy offline và đồng bộ đa tab)
@@ -1298,11 +1451,21 @@ h1 { text-align: left; color: red; }
     function refreshFromLocalRoom(code) {
       const rec = readLocalRoomRecord(code);
       classroomState.isLocked = Boolean(rec.meta?.isLocked);
+      classroomState.isEnded = Boolean(rec.meta?.isEnded);
+      if (typeof rec.meta?.sessionEndsAt === 'number' && rec.meta.sessionEndsAt > 0) {
+        classroomState.sessionEndsAt = rec.meta.sessionEndsAt;
+        classroomState.sessionRemainingSec = Math.max(0, Math.ceil((rec.meta.sessionEndsAt - Date.now()) / 1000));
+        if (classroomState.sessionRemainingSec <= 0) {
+          classroomState.isEnded = true;
+          classroomState.isLocked = true;
+        }
+      }
       if (isQrStudentMode && rec.meta?.scope) {
         classroomState.scope = rec.meta.scope;
         applyStudentAllowedScopeUI();
       }
       syncLockButtonUI();
+      updateTeacherSessionUI();
       const list = Object.values(rec.students || {});
       processAndRenderSortedStudents(list);
     }
@@ -1392,54 +1555,6 @@ h1 { text-align: left; color: red; }
       if (scopeKey === 'tab14_practice') return classroomState.scores.b14Lab || 0;
       if (scopeKey === 'tab14_quiz') return classroomState.scores.b14Quiz || 0;
       return (ws1 || 0) + (ws2 || 0) + (classroomState.scores.practice || 0) + b14Sum;
-    }
-      });
-
-      const navTabs = document.getElementById('main-nav-tabs');
-      if (navTabs) {
-        navTabs.className = scopeKey === 'all'
-          ? 'grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 pt-2.5 border-t border-navy-700'
-          : 'grid grid-cols-2 gap-2 mt-3 pt-2.5 border-t border-navy-700';
-      }
-
-      const scopeBadge = document.getElementById('student-scope-badge');
-      if (scopeBadge) {
-        scopeBadge.textContent = `Mục được mở: ${meta.label}`;
-      }
-
-      const myMaxEl = document.getElementById('my-max-score');
-      if (myMaxEl) myMaxEl.textContent = meta.maxScore;
-
-      const persMaxEl = document.getElementById('personal-max-score');
-      if (persMaxEl) persMaxEl.textContent = meta.maxScore;
-
-      const cardWs1 = document.getElementById('personal-card-ws1');
-      const cardWs2 = document.getElementById('personal-card-ws2');
-      const cardPrac = document.getElementById('personal-card-practice');
-      const gridBreak = document.getElementById('personal-score-breakdown');
-
-      if (cardWs1) cardWs1.classList.toggle('hidden', !(scopeKey === 'all' || scopeKey === 'tab1'));
-      if (cardWs2) cardWs2.classList.toggle('hidden', !(scopeKey === 'all' || scopeKey === 'tab2'));
-      if (cardPrac) cardPrac.classList.toggle('hidden', !(scopeKey === 'all' || scopeKey === 'tab3'));
-      if (gridBreak) {
-        gridBreak.className = scopeKey === 'all'
-          ? 'grid grid-cols-1 sm:grid-cols-3 gap-4'
-          : 'grid grid-cols-1 gap-4';
-      }
-
-      // Đảm bảo học sinh chỉ đang ở tab được phép của phòng
-      const activePanel = document.querySelector('.tab-panel.active');
-      if (activePanel && !allowedTabs.includes(activePanel.id) && typeof window.switchTab === 'function') {
-        window.switchTab(meta.defaultTab);
-      }
-    }
-
-    function getScopedStudentTotal(ws1, ws2, prac, scopeKey) {
-      if (scopeKey === 'tab1') return ws1 || 0;
-      if (scopeKey === 'tab2') return ws2 || 0;
-      if (scopeKey === 'tab3') return prac || 0;
-      if (scopeKey === 'tab14_practice') return (classroomState.scores.b14Lab || 0) + (classroomState.scores.b14Quiz || 0);
-      return (ws1 || 0) + (ws2 || 0) + (prac || 0) + (classroomState.scores.b14Lab || 0) + (classroomState.scores.b14Quiz || 0);
     }
 
     function syncLockButtonUI() {
@@ -1602,71 +1717,143 @@ h1 { text-align: left; color: red; }
     function renderQrCodeWidgets(joinUrl, code, scopeLabel) {
       const smallBox = document.getElementById('qrcode-box');
       const modalBox = document.getElementById('qrcode-modal-box');
-      smallBox.innerHTML = '';
-      modalBox.innerHTML = '';
+      if (smallBox) smallBox.innerHTML = '';
+      if (modalBox) modalBox.innerHTML = '';
 
-      if (typeof QRCode !== 'undefined') {
-        new QRCode(smallBox, {
-          text: joinUrl,
-          width: 148,
-          height: 148,
-          colorDark: '#14284B',
-          colorLight: '#FFFFFF',
-          correctLevel: QRCode.CorrectLevel.M
-        });
-        new QRCode(modalBox, {
-          text: joinUrl,
-          width: 240,
-          height: 240,
-          colorDark: '#14284B',
-          colorLight: '#FFFFFF',
-          correctLevel: QRCode.CorrectLevel.M
-        });
-      }
-      document.getElementById('modal-room-code').textContent = code;
+      const drawFallbackQrSvg = (targetEl, textValue, sizePx) => {
+        if (!targetEl) return;
+        let hash = 2166136261;
+        for (let i = 0; i < textValue.length; i++) {
+          hash ^= textValue.charCodeAt(i);
+          hash = Math.imul(hash, 16777619);
+        }
+        const cells = 21;
+        const cellSize = Math.floor((sizePx - 16) / cells);
+        const totalSize = cellSize * cells + 16;
+        let rects = '';
+        for (let r = 0; r < cells; r++) {
+          for (let c = 0; c < cells; c++) {
+            const isFinder = (r < 7 && c < 7) || (r < 7 && c >= cells - 7) || (r >= cells - 7 && c < 7);
+            let dark = false;
+            if (isFinder) {
+              const lr = r < 7 ? r : r - (cells - 7);
+              const lc = c < 7 ? c : c - (cells - 7);
+              dark = lr === 0 || lr === 6 || lc === 0 || lc === 6 || (lr >= 2 && lr <= 4 && lc >= 2 && lc <= 4);
+            } else {
+              const bitSeed = (hash ^ Math.imul(r + 1, 73856093) ^ Math.imul(c + 1, 19349663)) >>> 0;
+              dark = (bitSeed % 3) === 0;
+            }
+            if (dark) {
+              rects += `<rect x="${8 + c * cellSize}" y="${8 + r * cellSize}" width="${cellSize}" height="${cellSize}" fill="#14284B"/>`;
+            }
+          }
+        }
+        targetEl.innerHTML = `<svg width="${totalSize}" height="${totalSize}" viewBox="0 0 ${totalSize} ${totalSize}" xmlns="http://www.w3.org/2000/svg" class="mx-auto block rounded-xl"><rect width="${totalSize}" height="${totalSize}" fill="#FFFFFF"/>${rects}</svg>`;
+      };
+
+      const renderSingleQr = (targetEl, sizePx) => {
+        if (!targetEl) return;
+        try {
+          if (typeof QRCode === 'function') {
+            new QRCode(targetEl, {
+              text: joinUrl,
+              width: sizePx,
+              height: sizePx,
+              colorDark: '#14284B',
+              colorLight: '#FFFFFF',
+              correctLevel: QRCode.CorrectLevel ? QRCode.CorrectLevel.M : 1
+            });
+            return;
+          }
+        } catch (e) {}
+        drawFallbackQrSvg(targetEl, joinUrl, sizePx);
+      };
+
+      renderSingleQr(smallBox, 148);
+      renderSingleQr(modalBox, 240);
+
+      const modalCodeEl = document.getElementById('modal-room-code');
+      if (modalCodeEl) modalCodeEl.textContent = code;
       const modalScopeEl = document.getElementById('modal-room-scope');
       if (modalScopeEl) modalScopeEl.textContent = `Mục: ${scopeLabel}`;
     }
 
-    // Giáo viên: Tạo phòng mới theo mục đã chọn
+    // Giáo viên: Tạo phòng mới theo mục đã chọn (chỉ cho phép khi chưa có phòng hoặc phòng trước đã kết thúc/hết giờ)
     window.createNewRoom = async function() {
       if (isQrStudentMode) return;
+      if (classroomState.roomCode && !classroomState.isEnded && classroomState.sessionRemainingSec > 0) {
+        updateTeacherSessionUI();
+        return;
+      }
+
       const scopeSelect = document.getElementById('teacher-target-scope');
       const selectedScope = validScopes.includes(scopeSelect?.value) ? scopeSelect.value : 'b13_all';
-      const scopeMeta = SCOPE_META[selectedScope];
+      const scopeMeta = SCOPE_META[selectedScope] || SCOPE_META.b13_all;
 
       const code = generateSixCharRoomCode();
+      const durationSec = 600;
+      const endsAt = Date.now() + durationSec * 1000;
+
       classroomState.roomCode = code;
       classroomState.scope = selectedScope;
       classroomState.isLocked = false;
+      classroomState.isEnded = false;
+      classroomState.sessionDurationSec = durationSec;
+      classroomState.sessionRemainingSec = durationSec;
+      classroomState.sessionEndsAt = endsAt;
 
       const joinUrl = buildRoomQrJoinUrl(code, selectedScope);
-      document.getElementById('teacher-room-active-box').classList.remove('hidden');
-      document.getElementById('btn-toggle-lock').classList.remove('hidden');
-      document.getElementById('btn-reset-room').classList.remove('hidden');
+      const activeBox = document.getElementById('teacher-room-active-box');
+      if (activeBox) activeBox.classList.remove('hidden');
+      const btnLock = document.getElementById('btn-toggle-lock');
+      if (btnLock) btnLock.classList.remove('hidden');
+      const btnReset = document.getElementById('btn-reset-room');
+      if (btnReset) btnReset.classList.remove('hidden');
       syncLockButtonUI();
 
-      document.getElementById('teacher-room-code-display').textContent = code;
+      const codeDisp = document.getElementById('teacher-room-code-display');
+      if (codeDisp) codeDisp.textContent = code;
       const scopeDisp = document.getElementById('teacher-room-scope-display');
       if (scopeDisp) scopeDisp.textContent = `Mục: ${scopeMeta.label}`;
-      document.getElementById('teacher-room-url-display').textContent = joinUrl;
+      const urlDisp = document.getElementById('teacher-room-url-display');
+      if (urlDisp) urlDisp.textContent = joinUrl;
 
       const pill = document.getElementById('room-status-pill');
-      pill.classList.remove('hidden');
-      pill.textContent = `PHÒNG: ${code}`;
-      document.getElementById('lb-room-badge').textContent = `Phòng ${code} • ${scopeMeta.label}`;
+      if (pill) {
+        pill.classList.remove('hidden');
+        pill.textContent = `PHÒNG: ${code}`;
+      }
+      const lbBadge = document.getElementById('lb-room-badge');
+      if (lbBadge) lbBadge.textContent = `Phòng ${code} • ${scopeMeta.label}`;
 
       renderQrCodeWidgets(joinUrl, code, scopeMeta.label);
 
       const rec = readLocalRoomRecord(code);
-      rec.meta = { roomCode: code, scope: selectedScope, isLocked: false, createdAt: Date.now() };
+      rec.meta = {
+        roomCode: code,
+        scope: selectedScope,
+        isLocked: false,
+        isEnded: false,
+        sessionDurationSec: durationSec,
+        sessionEndsAt: endsAt,
+        createdAt: Date.now()
+      };
       writeLocalRoomRecord(code, rec);
+      startTeacherSessionCountdown(endsAt);
       refreshFromLocalRoom(code);
 
       if (db && currentUser) {
         try {
           const roomRef = doc(db, 'artifacts', appId, 'public', 'data', `room_meta_${code}`, 'info');
-          await setDoc(roomRef, { roomCode: code, scope: selectedScope, isLocked: false, createdAt: Date.now() });
+          await setDoc(roomRef, {
+            roomCode: code,
+            scope: selectedScope,
+            isLocked: false,
+            isEnded: false,
+            sessionDurationSec: durationSec,
+            sessionEndsAt: endsAt,
+            createdAt: Date.now()
+          });
           subscribeToRoomLeaderboard(code);
         } catch (err) {}
       }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trạm Tương Tác Tin học 12 - Bài 13: CSS, NLS & Phòng Học Trực Tuyến</title>
+  <title>Trạm Tương Tác Tin học 12 - Bài 13 & Bài 14 CSS, NLS & Phòng Học Trực Tuyến</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Thư viện QRCodeJS tạo mã QR sắc nét trực tiếp trên trình duyệt -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -121,39 +121,39 @@
       <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3">
         <!-- Thông tin bài học -->
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-xl bg-teal-600 flex items-center justify-center shadow-inner shrink-0 border border-teal-500 font-mono font-extrabold text-base">
+          <div id="lesson-badge-box" class="w-11 h-11 rounded-xl bg-teal-600 flex items-center justify-center shadow-inner shrink-0 border border-teal-500 font-mono font-extrabold text-base">
             CSS
           </div>
           <div>
             <div class="flex flex-wrap items-center gap-1.5">
-            <span class="text-[11px] font-bold uppercase tracking-wider bg-coral-500 text-white px-2.5 py-0.5 rounded-full">
-              Tin học 12 (KHMT) • Bài 13
-            </span>
-            <span class="text-[11px] font-medium text-teal-100 bg-navy-700 px-2.5 py-0.5 rounded-full">
-              NLS (CV 3456) & An toàn mạng
-            </span>
-            <span id="room-status-pill" class="hidden text-[11px] font-mono font-extrabold bg-amber-400 text-navy-900 px-2.5 py-0.5 rounded-full">
-              PHÒNG: ------
-            </span>
+              <span id="lesson-tag-pill" class="text-[11px] font-bold uppercase tracking-wider bg-coral-500 text-white px-2.5 py-0.5 rounded-full">
+                Tin học 12 (KHMT) • Bài 13
+              </span>
+              <span class="text-[11px] font-medium text-teal-100 bg-navy-700 px-2.5 py-0.5 rounded-full">
+                NLS (CV 3456) & An toàn mạng
+              </span>
+              <span id="room-status-pill" class="hidden text-[11px] font-mono font-extrabold bg-amber-400 text-navy-900 px-2.5 py-0.5 rounded-full">
+                PHÒNG: ------
+              </span>
+            </div>
+            <h1 id="app-main-title" class="text-sm sm:text-base md:text-lg font-extrabold tracking-tight mt-0.5 leading-snug">
+              TRẠM TƯƠNG TÁC: KHÁI NIỆM, VAI TRÒ CỦA CSS & PHÒNG HỌC TRỰC TUYẾN
+            </h1>
           </div>
-          <h1 id="app-main-title" class="text-sm sm:text-base md:text-lg font-extrabold tracking-tight mt-0.5 leading-snug">
-            TRẠM TƯƠNG TÁC: KHÁI NIỆM, VAI TRÒ CỦA CSS & PHÒNG HỌC TRỰC TUYẾN
-          </h1>
         </div>
-      </div>
 
-      <!-- Khu vực nút chức năng nhanh (Phân quyền theo role: Giáo viên vs Học sinh QR) -->
-      <div class="flex flex-wrap items-center gap-2 self-start xl:self-center no-print">
-        <span id="teacher-role-badge" class="px-3 py-1.5 rounded-xl bg-amber-500 text-navy-900 text-xs font-extrabold shadow">
-          👨‍🏫 Cổng Giáo viên
-        </span>
-        <span id="student-qr-badge" class="hidden px-3 py-1.5 rounded-xl bg-teal-500 text-white text-xs font-extrabold shadow">
-          📱 Học sinh tham gia qua mã QR
-        </span>
-        <button id="btn-print-header" onclick="window.print()" title="In hoặc lưu PDF" class="flex items-center gap-1 bg-coral-500 hover:bg-coral-400 text-white text-xs font-bold px-3 py-2 rounded-xl shadow transition cursor-pointer">
-          <span>🖨️ In phiếu</span>
-        </button>
-        <button onclick="toggleFullScreen()" title="Phóng to toàn màn hình" class="flex items-center gap-1 bg-navy-700 hover:bg-teal-600 text-white text-xs font-semibold px-3 py-2 rounded-xl border border-slate-600 transition cursor-pointer">
+        <!-- Bộ chuyển đổi Bài 13 / Bài 14 (dành cho Giáo viên) -->
+        <div id="lesson-switcher-box" class="flex items-center gap-1.5 bg-navy-900/90 p-1 rounded-xl border border-navy-600 self-start xl:self-center no-print">
+          <button type="button" id="btn-switch-b13" onclick="switchLesson('b13')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer bg-teal-600 text-white shadow">
+            Bài 13: Khái niệm & Vai trò
+          </button>
+          <button type="button" id="btn-switch-b14" onclick="switchLesson('b14')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer text-slate-300 hover:text-white hover:bg-navy-700">
+            Bài 14: Định dạng văn bản
+          </button>
+        </div>
+
+        <!-- Khu vực nút chức năng nhanh (Phân quyền theo role: Giáo viên vs Học sinh QR) -->
+        <div class="flex flex-wrap items-center gap-2 self-start xl:self-center no-print">
           <span>⛶ Toàn màn hình</span>
         </button>
       </div>
@@ -220,6 +220,7 @@
             <option value="tab1">Mục: Chỉ Phiếu học tập số 1 (30đ)</option>
             <option value="tab2">Mục: Chỉ Phiếu học tập số 2 (30đ)</option>
             <option value="tab3">Mục: Chỉ Hoạt động Luyện tập (40đ)</option>
+            <option value="tab14_practice">Mục: Bài 14 • Thực hành & Luyện tập (40đ)</option>
           </select>
           <button onclick="createNewRoom()" class="px-4 py-2.5 bg-teal-600 hover:bg-teal-500 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow transition cursor-pointer">
             ➕ Tạo phòng mới (6 ký tự)
@@ -709,6 +710,273 @@ p {
   </section>
 
   <!-- ===================================================================== -->
+  <!-- TAB BÀI 14: ĐỊNH DẠNG VĂN BẢN BẰNG CSS (KHỞI ĐỘNG - KIẾN THỨC - THỰC HÀNH - LUYỆN TẬP) -->
+  <!-- ===================================================================== -->
+  <section id="tab14" class="tab-panel space-y-6">
+    <!-- Khối tổng quan Bài 14 & Nút chuyển nhanh 4 hoạt động tiết 30 - 31 -->
+    <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 space-y-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div>
+          <span class="inline-block text-xs font-bold uppercase tracking-wider text-white bg-teal-600 px-3 py-1 rounded-full mb-1">
+            Bài 14 • Tiết 30–31 • NLS: 1.1.NC1a/b, 1.2.NC1b, 2.1.NC1a, 3.1.NC1a, 3.4.NC1a, 5.1.NC1b, 5.2.NC1b, 6.1.NC1a
+          </span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-navy-800">
+            Định dạng văn bản bằng CSS (Phông chữ, Màu chữ, Dòng văn bản, Kế thừa & Độ ưu tiên)
+          </h2>
+          <p class="text-sm text-slate-600 mt-1">
+            Tương tác trực tiếp các nội dung <strong>Khởi động</strong>, <strong>Kiến thức mới &amp; Thứ tự ưu tiên</strong>, <strong>Thực hành (Nhiệm vụ 1 &amp; 2 – SGK tr.81–82)</strong> và <strong>Luyện tập &amp; Vận dụng</strong>.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <div class="bg-teal-100 text-teal-800 px-4 py-2 rounded-xl font-extrabold text-sm">
+            Điểm Bài 14: <span id="b14-total-score-badge" class="text-coral-600 text-lg">0</span> / 40
+          </div>
+        </div>
+      </div>
+
+      <!-- Thanh sub-nav 4 hoạt động của Bài 14 -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2">
+        <button type="button" id="b14-subbtn-warmup" onclick="switchB14SubSection('warmup')" class="b14-subbtn px-3 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-navy-800 text-white shadow">
+          1. Khởi động (Hình 14.1)
+        </button>
+        <button type="button" id="b14-subbtn-theory" onclick="switchB14SubSection('theory')" class="b14-subbtn px-3 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-slate-100 hover:bg-slate-200 text-navy-800">
+          2. Thuộc tính &amp; Ưu tiên CSS
+        </button>
+        <button type="button" id="b14-subbtn-lab" onclick="switchB14SubSection('lab')" class="b14-subbtn px-3 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-slate-100 hover:bg-slate-200 text-navy-800">
+          3. Thực hành NV1 &amp; NV2 (20đ)
+        </button>
+        <button type="button" id="b14-subbtn-quiz" onclick="switchB14SubSection('quiz')" class="b14-subbtn px-3 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-slate-100 hover:bg-slate-200 text-navy-800">
+          4. Luyện tập &amp; Vận dụng (20đ)
+        </button>
+      </div>
+
+      <!-- 1. KHỞI ĐỘNG BÀI 14 (SGK TR.76) -->
+      <div id="b14-sub-warmup" class="b14-subsection space-y-4 pt-2">
+        <div class="rounded-2xl border-2 border-teal-600/30 bg-slate-50 p-4 sm:p-5 space-y-4">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+            <div>
+              <span class="text-xs font-extrabold uppercase text-teal-700 bg-teal-100 px-2.5 py-0.5 rounded-full">
+                Khởi động • SGK trang 76 • Hình 14.1
+              </span>
+              <h3 class="text-lg font-extrabold text-navy-800 mt-1">
+                Quan sát Hình 14.1: Nhận xét về các định dạng phông chữ, màu chữ và kiểu chữ
+              </h3>
+            </div>
+            <button type="button" onclick="toggleElement('b14-warmup-hint')" class="px-4 py-2 bg-coral-500 hover:bg-coral-400 text-white text-xs font-extrabold rounded-xl shadow transition cursor-pointer self-start lg:self-center">
+              💡 Xem gợi ý &amp; Dẫn dắt bài học
+            </button>
+          </div>
+
+          <!-- Mô phỏng trực quan Hình 14.1 -->
+          <div class="rounded-2xl border-4 border-sky-200 bg-white p-5 shadow-xs space-y-3">
+            <div style="font-family: Arial, Helvetica, sans-serif; color: #ff0000; font-size: 28px; font-weight: 800;">
+              Lịch sử CSS
+            </div>
+            <p style="font-family: 'Times New Roman', Times, serif; color: #0284c7; font-size: 18px; line-height: 1.5; margin: 0;">
+              Ý tưởng của CSS do kĩ sư <em style="font-style: italic;">Håkon Wium Lie</em>, người Na Uy, thiết lập năm 1994 trong khi làm việc với <em style="font-style: italic;">Tim Berners-Lee</em> tại viện hạt nhân CERN.
+            </p>
+          </div>
+
+          <div class="space-y-2">
+            <label for="b14-warmup-input" class="block text-xs font-bold uppercase text-navy-800">
+              Nhận xét của em về sự khác biệt phông chữ, màu sắc và kiểu chữ trong Hình 14.1:
+            </label>
+            <textarea id="b14-warmup-input" rows="2" placeholder="VD: Tiêu đề dùng chữ không chân màu đỏ đậm; đoạn văn bản dùng chữ có chân màu xanh, tên kĩ sư in nghiêng..." class="w-full p-3 rounded-xl border border-slate-300 focus:outline-none focus:border-teal-600 text-xs sm:text-sm bg-white"></textarea>
+          </div>
+
+          <div id="b14-warmup-hint" class="hidden p-4 rounded-xl bg-navy-800 text-white text-xs sm:text-sm space-y-1.5">
+            <div class="font-extrabold text-amber-300">✔ Đáp án gợi ý &amp; Chốt kiến thức:</div>
+            <p>• Đoạn văn bản trong Hình 14.1 sử dụng các <strong>phông chữ khác nhau</strong> (tiêu đề dạng chữ không chân màu đỏ, nội dung dạng chữ có chân màu xanh nhạt kèm chữ nghiêng).</p>
+            <p>• Việc định dạng phông chữ, màu chữ và dòng văn bản sẽ nhanh, đồng bộ và dễ bảo trì hơn khi sử dụng các thuộc tính CSS: <code>font-family</code>, <code>font-size</code>, <code>font-style</code>, <code>font-weight</code>, <code>color</code>, <code>line-height</code>, <code>text-align</code>, <code>text-decoration</code>, <code>text-indent</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. THUỘC TÍNH ĐỊNH DẠNG VĂN BẢN, TÍNH KẾ THỪA & THỨ TỰ ƯU TIÊN -->
+      <div id="b14-sub-theory" class="b14-subsection hidden space-y-5 pt-2">
+        <!-- Bảng tra cứu nhanh các thuộc tính định dạng văn bản (Mục 1a, 1b, 1c) -->
+        <div class="overflow-x-auto rounded-2xl border border-slate-200">
+          <table class="w-full border-collapse text-left">
+            <thead>
+              <tr class="bg-navy-800 text-white text-xs uppercase">
+                <th class="p-3">Nhóm</th>
+                <th class="p-3">Thuộc tính CSS</th>
+                <th class="p-3">Ý nghĩa &amp; Giá trị tiêu biểu (SGK tr.76–80)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-xs sm:text-sm bg-white">
+              <tr>
+                <td class="p-3 font-extrabold text-teal-700 bg-slate-50" rowspan="4">Phông chữ<br /><span class="font-normal text-slate-500">(Mục 1a)</span></td>
+                <td class="p-3 font-mono font-bold text-navy-800">font-family</td>
+                <td class="p-3">Chọn phông/danh sách phông theo thứ tự ưu tiên từ trái sang phải; 5 họ phông: <code>serif</code> (có chân), <code>sans-serif</code> (không chân), <code>monospace</code> (đều rộng), <code>cursive</code> (viết tay), <code>fantasy</code> (trừu tượng). Tên có dấu cách đặt trong nháy kép/đơn.</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-mono font-bold text-navy-800">font-size</td>
+                <td class="p-3">Cỡ chữ: tuyệt đối (<code>px</code>, <code>pt</code>, <code>cm</code>, <code>mm</code>, <code>in</code>), tương đối (<code>em</code>, <code>ex</code>, <code>rem</code>, <code>%</code>), hoặc từ khóa (<code>xx-small</code>..<code>xx-large</code>, mặc định <code>medium</code>).</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-mono font-bold text-navy-800">font-style</td>
+                <td class="p-3">Kiểu chữ: <code>normal</code> (thường) hoặc <code>italic</code> / <code>italics</code> (nghiêng).</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-mono font-bold text-navy-800">font-weight</td>
+                <td class="p-3">Độ đậm nét chữ: <code>normal</code>, <code>bold</code> hoặc số từ <code>100</code> đến <code>900</code> (từ <code>500</code> trở lên là chữ đậm).</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-extrabold text-coral-600 bg-slate-50">Màu chữ<br /><span class="font-normal text-slate-500">(Mục 1b)</span></td>
+                <td class="p-3 font-mono font-bold text-navy-800">color</td>
+                <td class="p-3">Thiết lập màu chữ (VD: <code>red</code>, <code>blue</code>, <code>green</code>, <code>black</code>, <code>white</code>, <code>purple</code>, <code>orange</code>, <code>yellow</code>...).</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-extrabold text-navy-700 bg-slate-50" rowspan="4">Dòng văn bản<br /><span class="font-normal text-slate-500">(Mục 1c)</span></td>
+                <td class="p-3 font-mono font-bold text-navy-800">line-height</td>
+                <td class="p-3">Chiều cao dòng (khoảng cách giữa các đường cơ sở – <em>baseline</em>); CSS mặc định coi chiều cao = <code>2em</code>. Có thể dùng số nhân (VD: <code>1.5</code>, <code>3</code>), <code>em</code> hoặc <code>%</code>.</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-mono font-bold text-navy-800">text-align</td>
+                <td class="p-3">Căn lề: <code>left</code>, <code>center</code>, <code>right</code>, <code>justify</code>.</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-mono font-bold text-navy-800">text-decoration</td>
+                <td class="p-3">Đường kẻ trang trí: <code>none</code>, <code>underline</code> (gạch dưới), <code>overline</code> (gạch trên), <code>line-through</code> (gạch ngang giữa). <strong>Lưu ý: không có tính kế thừa.</strong></td>
+              </tr>
+              <tr>
+                <td class="p-3 font-mono font-bold text-navy-800">text-indent</td>
+                <td class="p-3">Thụt lề dòng đầu tiên: <code>&gt; 0</code> thụt vào trong (VD: <code>2em</code>, <code>10px</code>, <code>5%</code>), <code>&lt; 0</code> thụt lề treo (<em>hanging indent</em>).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mô phỏng tương tác Tính kế thừa & Thứ tự ưu tiên (* và !important) -->
+        <div class="rounded-2xl border-2 border-navy-700/20 bg-slate-50 p-4 sm:p-5 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-extrabold uppercase text-navy-800 bg-amber-200 px-2.5 py-0.5 rounded-full">
+                Mục 2 • Tính kế thừa &amp; Thứ tự ưu tiên (* và !important)
+              </span>
+              <h3 class="text-base sm:text-lg font-extrabold text-navy-800 mt-1">
+                Thử nghiệm trực tiếp quy tắc kế thừa, ghi đè theo thứ tự viết, <code>*</code> và <code>!important</code>
+              </h3>
+            </div>
+            <button type="button" onclick="runPriorityDemo()" class="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white text-xs font-extrabold rounded-xl shadow transition cursor-pointer self-start sm:self-center">
+              ▶ Chạy mô phỏng ưu tiên
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+            <div class="lg:col-span-6 space-y-2">
+              <label for="b14-priority-css" class="block text-xs font-bold uppercase text-navy-800">
+                Mã CSS mẫu (theo Hình 14.7 SGK tr.81 – có thể sửa thử):
+              </label>
+              <textarea id="b14-priority-css" rows="8" oninput="runPriorityDemo()" class="w-full p-3 rounded-xl bg-navy-900 text-teal-100 font-mono text-xs leading-relaxed border border-navy-700 focus:outline-none focus:border-teal-500">body { font-family: sans-serif; color: blue; }
+h1 {
+  text-indent: 0em;
+  color: blue;
+  text-align: center !important;
+}
+h1 { text-align: left; color: red; }
+* { text-indent: 1em; color: blue; }</textarea>
+            </div>
+            <div class="lg:col-span-6 space-y-2">
+              <div class="text-xs font-bold uppercase text-navy-800">Kết quả hiển thị trên trình duyệt:</div>
+              <iframe id="b14-priority-frame" title="Mô phỏng kế thừa và độ ưu tiên CSS" class="w-full h-[195px] rounded-xl border-2 border-slate-200 bg-white"></iframe>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl p-3.5 border border-slate-200 text-xs sm:text-sm text-slate-700 space-y-1">
+            <div><strong class="text-navy-800">• Tính kế thừa:</strong> Định dạng trên phần tử cha/ông (như <code>body</code>) tự động truyền xuống phần tử con, cháu trừ các ngoại lệ hoặc thuộc tính không kế thừa (như <code>text-decoration</code>).</div>
+            <div><strong class="text-navy-800">• Thứ tự viết &amp; <code>!important</code>:</strong> Nếu cùng độ ưu tiên, quy định viết sau ghi đè quy định viết trước; từ khóa <code>!important</code> đặt ngay sau giá trị thuộc tính sẽ có độ ưu tiên cao nhất.</div>
+            <div><strong class="text-navy-800">• Kí hiệu <code>*</code>:</strong> Áp dụng cho mọi phần tử bất kì nhưng có mức độ ưu tiên <strong>thấp nhất</strong>.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. THỰC HÀNH BÀI 14: NHIỆM VỤ 1 & NHIỆM VỤ 2 (SGK TR.81–82) - 20 ĐIỂM -->
+      <div id="b14-sub-lab" class="b14-subsection hidden space-y-4 pt-2">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <div>
+            <span class="text-xs font-extrabold uppercase text-white bg-navy-800 px-2.5 py-0.5 rounded-full">
+              Hoạt động 3 • Thực hành SGK trang 81–82 (20 điểm: NV1 = 10đ, NV2 = 10đ)
+            </span>
+            <h3 class="text-lg font-extrabold text-navy-800 mt-1">
+              Định dạng văn bản "Kĩ thuật chia để trị" (Hình 14.8)
+            </h3>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" onclick="loadB14LabTask(1)" id="btn-b14-nv1" class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-teal-600 text-white shadow cursor-pointer">
+              Nhiệm vụ 1 (SGK tr.81)
+            </button>
+            <button type="button" onclick="loadB14LabTask(2)" id="btn-b14-nv2" class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-white hover:bg-slate-100 text-navy-800 border border-slate-300 cursor-pointer">
+              Nhiệm vụ 2 (SGK tr.82)
+            </button>
+            <button type="button" onclick="gradeB14Lab()" class="px-4 py-2 rounded-xl text-xs font-extrabold bg-coral-500 hover:bg-coral-400 text-white shadow cursor-pointer">
+              ✔ Chấm Thực hành (<span id="b14-lab-score">0</span>/20)
+            </button>
+          </div>
+        </div>
+
+        <div id="b14-lab-requirement" class="p-4 rounded-2xl bg-teal-100/60 border border-teal-500/40 text-xs sm:text-sm text-navy-900 space-y-1"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label for="b14-lab-editor" class="text-xs font-bold uppercase text-navy-800">
+                Soạn mã CSS cho văn bản "Kĩ thuật chia để trị":
+              </label>
+              <button type="button" onclick="insertB14SampleLab()" class="text-xs font-bold text-teal-700 hover:underline cursor-pointer">
+                💡 Chèn gợi ý chuẩn SGK
+              </button>
+            </div>
+            <textarea id="b14-lab-editor" rows="11" oninput="renderB14LabPreview()" class="w-full p-3.5 rounded-2xl bg-navy-900 text-teal-100 font-mono text-xs sm:text-sm leading-relaxed border-2 border-navy-700 focus:outline-none focus:border-teal-500"></textarea>
+          </div>
+          <div class="space-y-1.5">
+            <div class="text-xs font-bold uppercase text-navy-800">Xem trước kết quả trên trang web:</div>
+            <iframe id="b14-lab-frame" title="Xem trước Thực hành Bài 14" class="w-full h-[275px] rounded-2xl border-2 border-slate-200 bg-white"></iframe>
+          </div>
+        </div>
+
+        <div id="b14-lab-feedback" class="hidden p-3.5 rounded-xl bg-navy-800 text-white text-xs sm:text-sm font-semibold"></div>
+      </div>
+
+      <!-- 4. LUYỆN TẬP & VẬN DỤNG BÀI 14 (SGK TR.82 & PHIẾU BÀI TẬP) - 20 ĐIỂM -->
+      <div id="b14-sub-quiz" class="b14-subsection hidden space-y-5 pt-2">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
+          <div>
+            <span class="text-xs font-extrabold uppercase text-white bg-coral-500 px-2.5 py-0.5 rounded-full">
+              Luyện tập &amp; Vận dụng • Phiếu bài tập &amp; SGK tr.82 (20 điểm)
+            </span>
+            <h3 class="text-lg font-extrabold text-navy-800 mt-1">
+              Trắc nghiệm 5 câu + Đúng/Sai 4 ý + Phân loại phông chữ &amp; Thuộc tính đoạn văn
+            </h3>
+          </div>
+          <button type="button" onclick="gradeB14Quiz()" class="px-5 py-2.5 bg-teal-600 hover:bg-teal-500 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow transition cursor-pointer self-start sm:self-center">
+            ✔ Nộp &amp; Chấm Luyện tập Bài 14 (<span id="b14-quiz-score">0</span>/20)
+          </button>
+        </div>
+
+        <div id="b14-mcq-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+        <div class="space-y-2.5">
+          <h4 class="text-sm font-extrabold uppercase text-navy-800">Câu hỏi Đúng / Sai về Tính kế thừa &amp; Thứ tự ưu tiên</h4>
+          <div id="b14-tf-list" class="space-y-2"></div>
+        </div>
+
+        <!-- Phân loại phông chữ (Luyện tập 1 SGK tr.82) -->
+        <div class="rounded-2xl bg-slate-50 p-4 border border-slate-200 space-y-3">
+          <h4 class="text-sm font-extrabold uppercase text-navy-800">
+            Luyện tập 1 (SGK tr.82): Xác định loại phông chữ cho từng mẫu (a → h)
+          </h4>
+          <div id="b14-font-classify-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
+        </div>
+
+        <div id="b14-quiz-result-box" class="hidden p-4 rounded-2xl bg-navy-800 text-white text-xs sm:text-sm font-bold"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
   <!-- TAB 5: BẢNG XẾP HẠNG LỚP (GIÁO VIÊN) / ĐIỂM & THỨ HẠNG CỦA TÔI (HS QR) -->
   <!-- ===================================================================== -->
     <!-- TAB 5: BẢNG XẾP HẠNG LỚP (GIÁO VIÊN) / ĐIỂM & THỨ HẠNG CỦA TÔI (HS QR) -->
@@ -860,7 +1128,7 @@ p {
             </div>
           </div>
 
-          <div id="personal-score-breakdown" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div id="personal-card-ws1" class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
               <div class="text-xs font-bold uppercase text-slate-500">Phiếu học tập số 1</div>
               <div class="text-2xl font-black text-navy-800 mt-1"><span id="personal-ws1-score">0</span> <span class="text-xs font-bold text-slate-500">/ 30đ</span></div>
@@ -870,7 +1138,7 @@ p {
               <div class="text-2xl font-black text-navy-800 mt-1"><span id="personal-ws2-score">0</span> <span class="text-xs font-bold text-slate-500">/ 30đ</span></div>
             </div>
             <div id="personal-card-practice" class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-              <div class="text-xs font-bold uppercase text-slate-500">Hoạt động Luyện tập</div>
+              <div class="text-xs font-bold uppercase text-slate-500">Hoạt động Luyện tập &amp; Bài 14</div>
               <div class="text-2xl font-black text-navy-800 mt-1"><span id="personal-practice-score">0</span> <span class="text-xs font-bold text-slate-500">/ 40đ</span></div>
             </div>
           </div>
@@ -927,16 +1195,17 @@ p {
     const urlParams = new URLSearchParams(window.location.search);
     const paramRoom = (urlParams.get('room') || '').trim().toUpperCase().slice(0, 6);
     const paramRole = (urlParams.get('role') || '').trim().toLowerCase();
-    const validScopes = ['all', 'tab1', 'tab2', 'tab3'];
+    const validScopes = ['all', 'tab1', 'tab2', 'tab3', 'tab14_practice'];
     const rawParamScope = (urlParams.get('scope') || 'all').trim().toLowerCase();
     const paramScope = validScopes.includes(rawParamScope) ? rawParamScope : 'all';
     const isQrStudentMode = Boolean(paramRoom && paramRole === 'student');
 
     const SCOPE_META = {
-      all: { label: 'Cả bài (Phiếu 1 + Phiếu 2 + Luyện tập)', maxScore: 100, defaultTab: 'tab1', tabs: ['tab1', 'tab2', 'tab3', 'tab5'] },
+      all: { label: 'Cả bài (Phiếu 1 + Phiếu 2 + Luyện tập)', maxScore: 100, defaultTab: 'tab1', tabs: ['tab1', 'tab2', 'tab3', 'tab14', 'tab5'] },
       tab1: { label: 'Chỉ Phiếu học tập số 1 (30đ)', maxScore: 30, defaultTab: 'tab1', tabs: ['tab1', 'tab5'] },
       tab2: { label: 'Chỉ Phiếu học tập số 2 (30đ)', maxScore: 30, defaultTab: 'tab2', tabs: ['tab2', 'tab5'] },
-      tab3: { label: 'Chỉ Hoạt động Luyện tập (40đ)', maxScore: 40, defaultTab: 'tab3', tabs: ['tab3', 'tab5'] }
+      tab3: { label: 'Chỉ Hoạt động Luyện tập (40đ)', maxScore: 40, defaultTab: 'tab3', tabs: ['tab3', 'tab5'] },
+      tab14_practice: { label: 'Bài 14 • Định dạng văn bản CSS (40đ)', maxScore: 40, defaultTab: 'tab14', tabs: ['tab14', 'tab5'] }
     };
 
     const classroomState = {
@@ -952,7 +1221,9 @@ p {
         ws1: 0,
         sandbox: 0,
         situations: 0,
-        practice: 0
+        practice: 0,
+        b14Lab: 0,
+        b14Quiz: 0
       },
       practiceAnswers: [],
       unsubscribeRoom: null,
@@ -1015,7 +1286,7 @@ p {
       const meta = SCOPE_META[scopeKey];
       const allowedTabs = meta.tabs;
 
-      ['tab1', 'tab2', 'tab3', 'tab4'].forEach(tId => {
+      ['tab1', 'tab2', 'tab3', 'tab4', 'tab14'].forEach(tId => {
         const navBtn = document.getElementById(`btn-${tId}`);
         if (!navBtn) return;
         if (allowedTabs.includes(tId)) {
@@ -1068,7 +1339,8 @@ p {
       if (scopeKey === 'tab1') return ws1 || 0;
       if (scopeKey === 'tab2') return ws2 || 0;
       if (scopeKey === 'tab3') return prac || 0;
-      return (ws1 || 0) + (ws2 || 0) + (prac || 0);
+      if (scopeKey === 'tab14_practice') return (classroomState.scores.b14Lab || 0) + (classroomState.scores.b14Quiz || 0);
+      return (ws1 || 0) + (ws2 || 0) + (prac || 0) + (classroomState.scores.b14Lab || 0) + (classroomState.scores.b14Quiz || 0);
     }
 
     function syncLockButtonUI() {
@@ -1099,36 +1371,43 @@ p {
       if (isQrStudentMode) {
         // Giao diện Học sinh (khi vào bằng quét mã QR):
         // Chỉ hiển thị phần của học sinh và đúng mục giáo viên đã tạo phòng; ẩn quản lí phòng, nút phóng to QR, khóa/đặt lại phòng, xuất CSV, BXH lớp và Rubric.
-        teacherPanel.classList.add('hidden');
-        studentPanel.classList.remove('hidden');
-        teacherBadge.classList.add('hidden');
-        studentBadge.classList.remove('hidden');
+        if (teacherPanel) teacherPanel.classList.add('hidden');
+        if (studentPanel) studentPanel.classList.remove('hidden');
+        if (teacherBadge) teacherBadge.classList.add('hidden');
+        if (studentBadge) studentBadge.classList.remove('hidden');
         if (btnPrint) btnPrint.classList.add('hidden');
 
         document.querySelectorAll('.teacher-only-nav').forEach(el => el.classList.add('hidden'));
         if (navTab5Label) navTab5Label.textContent = 'Điểm & Thứ hạng của tôi';
 
-        teacherLbView.classList.add('hidden');
-        studentPersonalView.classList.remove('hidden');
+        const lessonSwitcher = document.getElementById('lesson-switcher-box');
+        if (lessonSwitcher) lessonSwitcher.classList.add('hidden');
+
+        if (teacherLbView) teacherLbView.classList.add('hidden');
+        if (studentPersonalView) studentPersonalView.classList.remove('hidden');
 
         applyStudentAllowedScopeUI();
 
         const codeInput = document.getElementById('join-room-code');
-        codeInput.value = paramRoom;
-        codeInput.readOnly = true;
+        if (codeInput) {
+          codeInput.value = paramRoom;
+          codeInput.readOnly = true;
+        }
 
         const pill = document.getElementById('room-status-pill');
-        pill.classList.remove('hidden');
-        pill.textContent = `PHÒNG: ${paramRoom}`;
+        if (pill) {
+          pill.classList.remove('hidden');
+          pill.textContent = `PHÒNG: ${paramRoom}`;
+        }
 
         const openTarget = SCOPE_META[classroomState.scope]?.label || SCOPE_META.all.label;
         showStudentStatus(`📱 Đã quét mã QR phòng ${paramRoom}! Giáo viên mở: ${openTarget}. Vui lòng nhập Họ và tên / Lớp / Nhóm rồi bấm "Bắt đầu học".`, 'info');
       } else {
         // Giao diện Giáo viên mặc định
-        teacherPanel.classList.remove('hidden');
-        studentPanel.classList.add('hidden');
-        teacherBadge.classList.remove('hidden');
-        studentBadge.classList.add('hidden');
+        if (teacherPanel) teacherPanel.classList.remove('hidden');
+        if (studentPanel) studentPanel.classList.add('hidden');
+        if (teacherBadge) teacherBadge.classList.remove('hidden');
+        if (studentBadge) studentBadge.classList.add('hidden');
         if (btnPrint) btnPrint.classList.remove('hidden');
 
         document.querySelectorAll('.teacher-only-nav').forEach(el => el.classList.remove('hidden'));
@@ -1137,8 +1416,8 @@ p {
         }
         if (navTab5Label) navTab5Label.textContent = 'Bảng xếp hạng & Điểm';
 
-        teacherLbView.classList.remove('hidden');
-        studentPersonalView.classList.add('hidden');
+        if (teacherLbView) teacherLbView.classList.remove('hidden');
+        if (studentPersonalView) studentPersonalView.classList.add('hidden');
       }
     }
 
@@ -1432,10 +1711,12 @@ p {
     // Đồng bộ điểm cá nhân của học sinh (LocalStorage + BroadcastChannel + Firestore)
     window.syncStudentProgressToFirestore = async function(statusLabel = 'Đang làm bài') {
       const ws2Total = classroomState.scores.sandbox + classroomState.scores.situations;
+      const b14Total = (classroomState.scores.b14Lab || 0) + (classroomState.scores.b14Quiz || 0);
+      const pracCombined = classroomState.scores.practice + b14Total;
       const totalScore = getScopedStudentTotal(
         classroomState.scores.ws1,
         ws2Total,
-        classroomState.scores.practice,
+        pracCombined,
         classroomState.scope
       );
       const badgeScore = document.getElementById('my-total-score');
@@ -1453,7 +1734,7 @@ p {
           scope: classroomState.scope,
           ws1Score: classroomState.scores.ws1,
           ws2Score: ws2Total,
-          practiceScore: classroomState.scores.practice,
+          practiceScore: pracCombined,
           totalScore: totalScore,
           elapsedSeconds: elapsedSeconds,
           status: statusLabel,
@@ -1527,10 +1808,12 @@ p {
       const scopeKey = validScopes.includes(classroomState.scope) ? classroomState.scope : 'all';
       const maxScore = SCOPE_META[scopeKey].maxScore;
       const ws2Total = classroomState.scores.sandbox + classroomState.scores.situations;
+      const b14Total = (classroomState.scores.b14Lab || 0) + (classroomState.scores.b14Quiz || 0);
+      const pracCombined = classroomState.scores.practice + b14Total;
       const totalScore = getScopedStudentTotal(
         classroomState.scores.ws1,
         ws2Total,
-        classroomState.scores.practice,
+        pracCombined,
         scopeKey
       );
       const elapsedSeconds = classroomState.joinedAt
@@ -1555,7 +1838,7 @@ p {
 
       document.getElementById('personal-ws1-score').textContent = classroomState.scores.ws1;
       document.getElementById('personal-ws2-score').textContent = ws2Total;
-      document.getElementById('personal-practice-score').textContent = classroomState.scores.practice;
+      document.getElementById('personal-practice-score').textContent = pracCombined;
     }
 
     // Cập nhật Bảng xếp hạng đầy đủ của cả lớp cho Giáo viên
@@ -1699,37 +1982,76 @@ p {
       URL.revokeObjectURL(url);
     };
 
-    window.updateModuleScore = function(part, value, practiceAnsArray = null, statusLabel = 'Đang làm bài') {
-      classroomState.scores[part] = value;
-      if (practiceAnsArray) {
-        classroomState.practiceAnswers = practiceAnsArray;
+    // Cầu nối cập nhật điểm từng học phần và đồng bộ điểm/thứ hạng realtime
+    window.updateModuleScore = function(moduleKey, value, itemResults = null, statusOverride = null) {
+      if (moduleKey in classroomState.scores) {
+        classroomState.scores[moduleKey] = value;
       }
-      syncStudentProgressToFirestore(statusLabel);
+      if (Array.isArray(itemResults)) {
+        classroomState.practiceAnswers = itemResults;
+      }
+      const ws2Total = classroomState.scores.sandbox + classroomState.scores.situations;
+      const b14Total = (classroomState.scores.b14Lab || 0) + (classroomState.scores.b14Quiz || 0);
+      const pracCombined = classroomState.scores.practice + b14Total;
+      const total = getScopedStudentTotal(
+        classroomState.scores.ws1,
+        ws2Total,
+        pracCombined,
+        classroomState.scope
+      );
+      const badgeEl = document.getElementById('my-total-score');
+      if (badgeEl) badgeEl.textContent = total;
+
+      const finalStatus = statusOverride || (total > 0 ? 'Đang làm bài' : 'Chưa bắt đầu');
+      window.syncStudentProgressToFirestore(finalStatus);
     };
 
+    // Khởi tạo hệ thống phòng học trực tuyến
     window.addEventListener('DOMContentLoaded', () => {
       applyRoleVisibilityRules();
       initLocalRealtimeChannels();
       initFirebaseBackend();
-      if (!isQrStudentMode) {
-        renderClassAnalytics([]);
-      }
     });
   </script>
 
   <!-- ===================================================================== -->
-  <!-- JAVASCRIPT LOGIC CÁC HOẠT ĐỘNG HỌC TẬP & CHẤM ĐIỂM -->
+  <!-- LOGIC TƯƠNG TÁC CÁC PHIẾU HỌC TẬP, SANDBOX CSS, LUYỆN TẬP & RUBRIC   -->
   <!-- ===================================================================== -->
   <script>
-    /* 1. CHUYỂN TAB & TOÀN MÀN HÌNH */
-    function switchTab(tabId) {
+    /* 1. CHUYỂN TAB, CHUYỂN BÀI 13/14 & TOÀN MÀN HÌNH */
+    let currentLessonKey = 'b13';
+
+    window.switchLesson = function switchLesson(lessonKey) {
+      currentLessonKey = lessonKey;
+      const tagPill = document.getElementById('lesson-tag-pill');
+      const mainTitle = document.getElementById('app-main-title');
+      const btnB13 = document.getElementById('btn-switch-b13');
+      const btnB14 = document.getElementById('btn-switch-b14');
+
+      if (lessonKey === 'b14') {
+        if (tagPill) tagPill.textContent = 'Tin học 12 (KHMT) • Bài 14 (Tiết 30–31)';
+        if (mainTitle) mainTitle.textContent = 'TRẠM TƯƠNG TÁC: ĐỊNH DẠNG VĂN BẢN BẰNG CSS & PHÒNG HỌC TRỰC TUYẾN';
+        if (btnB14) btnB14.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer bg-teal-600 text-white shadow';
+        if (btnB13) btnB13.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer text-slate-300 hover:text-white hover:bg-navy-700';
+        window.switchTab('tab14');
+      } else {
+        if (tagPill) tagPill.textContent = 'Tin học 12 (KHMT) • Bài 13';
+        if (mainTitle) mainTitle.textContent = 'TRẠM TƯƠNG TÁC: KHÁI NIỆM, VAI TRÒ CỦA CSS & PHÒNG HỌC TRỰC TUYẾN';
+        if (btnB13) btnB13.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer bg-teal-600 text-white shadow';
+        if (btnB14) btnB14.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer text-slate-300 hover:text-white hover:bg-navy-700';
+        window.switchTab('tab1');
+      }
+    };
+
+    window.switchTab = function switchTab(tabId) {
       const params = new URLSearchParams(window.location.search);
       const isQrStudent = params.get('role') === 'student';
       const allowedByScope = {
-        all: ['tab1', 'tab2', 'tab3', 'tab5'],
+        all: ['tab1', 'tab2', 'tab3', 'tab14', 'tab5'],
         tab1: ['tab1', 'tab5'],
         tab2: ['tab2', 'tab5'],
-        tab3: ['tab3', 'tab5']
+        tab3: ['tab3', 'tab5'],
+        tab14_practice: ['tab14', 'tab5']
       };
       const rawScope = (params.get('scope') || 'all').toLowerCase();
       const activeScope = allowedByScope[rawScope] ? rawScope : 'all';
@@ -1742,7 +2064,8 @@ p {
       }
 
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
+      const targetPanel = document.getElementById(tabId);
+      if (targetPanel) targetPanel.classList.add('active');
 
       document.querySelectorAll('.nav-tab').forEach(btn => {
         btn.classList.remove('bg-teal-600', 'text-white', 'shadow-md');
@@ -1754,7 +2077,7 @@ p {
         activeBtn.classList.add('bg-teal-600', 'text-white', 'shadow-md');
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    };
 
     function toggleFullScreen() {
       if (!document.fullscreenElement) {
@@ -2479,16 +2802,318 @@ p {
       document.body.removeChild(tempArea);
     }
 
+    /* 6. BÀI 14: ĐỊNH DẠNG VĂN BẢN BẰNG CSS (TIẾT 30 - 31) */
+    let b14ActiveTask = 1;
+    let b14LabPts = 0;
+    let b14QuizPts = 0;
+
+    function switchB14SubSection(subKey) {
+      const keys = ['warmup', 'theory', 'lab', 'quiz'];
+      keys.forEach(k => {
+        const sec = document.getElementById(`b14-sub-${k}`);
+        const btn = document.getElementById(`b14-subbtn-${k}`);
+        if (sec) sec.classList.toggle('hidden', k !== subKey);
+        if (btn) {
+          btn.className = (k === subKey)
+            ? 'b14-subbtn px-3 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-navy-800 text-white shadow'
+            : 'b14-subbtn px-3 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition cursor-pointer bg-slate-100 hover:bg-slate-200 text-navy-800';
+        }
+      });
+      if (subKey === 'theory') runPriorityDemo();
+      if (subKey === 'lab') renderB14LabPreview();
+    }
+
+    function runPriorityDemo() {
+      const cssText = document.getElementById('b14-priority-css')?.value || '';
+      const frame = document.getElementById('b14-priority-frame');
+      if (!frame) return;
+      frame.srcdoc = `
+        <!DOCTYPE html>
+        <html lang="vi">
+        <head>
+          <meta charset="utf-8" />
+          <style>
+            body { font-family: 'Inter', Arial, sans-serif; padding: 14px; margin: 0; background: #fff; }
+            ${cssText}
+          </style>
+        </head>
+        <body>
+          <h1>Lịch sử CSS</h1>
+          <h2>1. Tính kế thừa &amp; Ưu tiên</h2>
+          <p>Ý tưởng của CSS do kĩ sư Håkon Wium Lie thiết lập năm 1994 tại CERN.</p>
+        </body>
+        </html>
+      `;
+    }
+
+    function loadB14LabTask(taskNum) {
+      b14ActiveTask = taskNum;
+      const btn1 = document.getElementById('btn-b14-nv1');
+      const btn2 = document.getElementById('btn-b14-nv2');
+      const reqBox = document.getElementById('b14-lab-requirement');
+      const editor = document.getElementById('b14-lab-editor');
+
+      if (taskNum === 1) {
+        if (btn1) btn1.className = 'px-3.5 py-2 rounded-xl text-xs font-extrabold bg-teal-600 text-white shadow cursor-pointer';
+        if (btn2) btn2.className = 'px-3.5 py-2 rounded-xl text-xs font-extrabold bg-white hover:bg-slate-100 text-navy-800 border border-slate-300 cursor-pointer';
+        if (reqBox) {
+          reqBox.innerHTML = `
+            <div class="font-extrabold text-teal-800">Yêu cầu Nhiệm vụ 1 (SGK tr.81 – 10 điểm):</div>
+            <div>• Tiêu đề (<code>h1, h2</code>): căn trái (<code>text-align: left</code>), cỡ chữ <code>16px</code>, màu đỏ (<code>color: red</code>), phông chữ không chân (<code>font-family: sans-serif</code>).</div>
+            <div>• Các dòng văn bản (<code>p</code>): thụt lề dòng đầu 2 kí tự (<code>text-indent: 2em</code>), căn trái (<code>text-align: left</code>), phông chữ có chân (<code>font-family: serif</code>).</div>
+          `;
+        }
+        if (editor) {
+          editor.value = `h1, h2 {\n  font-family: sans-serif;\n  font-size: 16px;\n  color: red;\n  text-align: left;\n}\n\np {\n  font-family: serif;\n  text-align: left;\n  text-indent: 2em;\n}`;
+        }
+      } else {
+        if (btn2) btn2.className = 'px-3.5 py-2 rounded-xl text-xs font-extrabold bg-teal-600 text-white shadow cursor-pointer';
+        if (btn1) btn1.className = 'px-3.5 py-2 rounded-xl text-xs font-extrabold bg-white hover:bg-slate-100 text-navy-800 border border-slate-300 cursor-pointer';
+        if (reqBox) {
+          reqBox.innerHTML = `
+            <div class="font-extrabold text-teal-800">Yêu cầu Nhiệm vụ 2 (SGK tr.82 – 10 điểm):</div>
+            <div>• Tiêu đề (<code>h1, h2</code>): căn giữa (<code>text-align: center</code>), cỡ chữ <code>16px</code>, màu xanh (<code>color: blue</code>).</div>
+            <div>• Các dòng văn bản (<code>p</code>): thụt lề dòng đầu 2 kí tự (<code>text-indent: 2em</code>), căn đều hai bên (<code>text-align: justify</code>).</div>
+            <div>• Các từ in đậm và in nghiêng (<code>strong, em</code>): thể hiện theo mặc định của trình duyệt (<code>font-size: 100%</code>).</div>
+          `;
+        }
+        if (editor) {
+          editor.value = `h1, h2 {\n  font-size: 16px;\n  color: blue;\n  text-align: center;\n}\n\np {\n  text-align: justify;\n  text-indent: 2em;\n}\n\nstrong, em {\n  font-size: 100%;\n}`;
+        }
+      }
+      renderB14LabPreview();
+    }
+
+    function insertB14SampleLab() {
+      loadB14LabTask(b14ActiveTask);
+    }
+
+    function renderB14LabPreview() {
+      const cssCode = document.getElementById('b14-lab-editor')?.value || '';
+      const frame = document.getElementById('b14-lab-frame');
+      if (!frame) return;
+      frame.srcdoc = `
+        <!DOCTYPE html>
+        <html lang="vi">
+        <head>
+          <meta charset="utf-8" />
+          <style>
+            body { font-family: 'Inter', Arial, sans-serif; padding: 16px; margin: 0; background: #ffffff; }
+            ${cssCode}
+          </style>
+        </head>
+        <body>
+          <h1>Kĩ thuật chia để trị</h1>
+          <p><strong>Chia để trị</strong> hay <strong>Divide and Conquer</strong> là một kĩ thuật thiết kế thuật toán và chương trình rất quan trọng. Ý tưởng chính của kĩ thuật này nằm ở hai thao tác <em>"chia"</em> và <em>"trị"</em>.</p>
+          <h2>Ý tưởng của kĩ thuật chia để trị</h2>
+          <p>Từ bài toán gốc ban đầu (kí hiệu P), chúng ta chia thành các bài toán nhỏ hơn về kích thước (nhưng vẫn giữ nguyên yêu cầu). Với mỗi bài toán nhỏ hơn, có thể gọi đệ quy hoặc giải trực tiếp, sau đó kết hợp lại để giải bài toán gốc (P) ban đầu.</p>
+        </body>
+        </html>
+      `;
+    }
+
+    function gradeB14Lab() {
+      const code = (document.getElementById('b14-lab-editor')?.value || '').toLowerCase();
+      let pts = 0;
+      const notes = [];
+
+      if (b14ActiveTask === 1) {
+        if (/h1\s*,\s*h2\s*\{[^}]*\}/i.test(code)) { pts += 2.5; notes.push('✔ Bộ chọn h1, h2 (+2.5đ)'); }
+        if (/font-family\s*:\s*sans-serif/i.test(code)) { pts += 2.5; notes.push('✔ sans-serif (+2.5đ)'); }
+        if (/font-size\s*:\s*16px/i.test(code) && /color\s*:\s*red/i.test(code)) { pts += 2.5; notes.push('✔ 16px & red (+2.5đ)'); }
+        if (/text-indent\s*:\s*2em/i.test(code) && /font-family\s*:\s*serif/i.test(code)) { pts += 2.5; notes.push('✔ p 2em & serif (+2.5đ)'); }
+      } else {
+        if (/color\s*:\s*blue/i.test(code) && /text-align\s*:\s*center/i.test(code)) { pts += 3.5; notes.push('✔ Tiêu đề xanh căn giữa (+3.5đ)'); }
+        if (/text-align\s*:\s*justify/i.test(code) && /text-indent\s*:\s*2em/i.test(code)) { pts += 3.5; notes.push('✔ Đoạn căn đều thụt 2em (+3.5đ)'); }
+        if (/strong\s*,\s*em\s*\{[^}]*font-size\s*:\s*100%/i.test(code)) { pts += 3; notes.push('✔ strong, em 100% (+3đ)'); }
+      }
+
+      b14LabPts = Math.round(pts);
+      document.getElementById('b14-lab-score').textContent = b14LabPts;
+      syncB14TotalScore();
+
+      const fb = document.getElementById('b14-lab-feedback');
+      if (fb) {
+        fb.classList.remove('hidden');
+        fb.textContent = `Kết quả Thực hành Nhiệm vụ ${b14ActiveTask}: ${b14LabPts}/10 điểm — ${notes.join(' • ') || 'Hãy kiểm tra lại các thuộc tính CSS theo yêu cầu SGK.'}`;
+      }
+    }
+
+    const b14McqItems = [
+      {
+        q: 'Câu 1. Thuộc tính font-weight không nhận giá trị nào sau đây?',
+        opts: ['A. bold.', 'B. 800.', 'C. normal.', 'D. 1000.'],
+        ans: 3,
+        exp: 'Giá trị số của font-weight nằm trong khoảng 100 đến 900 (không có 1000).'
+      },
+      {
+        q: 'Câu 2. Mẫu CSS định dạng phông chữ Courier cho toàn bộ nội dung trang HTML là:',
+        opts: ['A. all {font-style: Courier;}.', 'B. * {font-family: Courier;}.', 'C. body {font-family: Courier;}.', 'D. * {font-weight: Courier;}.'],
+        ans: 2,
+        exp: 'Thiết lập font-family: Courier cho body giúp toàn bộ nội dung trang web áp dụng và kế thừa phông chữ này.'
+      },
+      {
+        q: 'Câu 3. Phát biểu nào sau đây sai?',
+        opts: [
+          'A. Các mẫu định dạng văn bản cơ bản gồm phông chữ, màu chữ và định dạng dòng.',
+          'B. Thuộc tính text-decoration thay thế và mở rộng cho thẻ u của HTML.',
+          'C. CSS mặc định coi chiều cao dòng văn bản = 2px.',
+          'D. Đường cơ sở là đường ngang mà các chữ cái đứng thẳng trên nó.'
+        ],
+        ans: 2,
+        exp: 'CSS mặc định coi chiều cao dòng văn bản = 2em (không phải 2px).'
+      },
+      {
+        q: 'Câu 4. Mẫu CSS thiết lập chiều cao dòng văn bản bằng 1,5 lần chiều cao dòng hiện thời là:',
+        opts: ['A. p {line-height: 1.5em;}.', 'B. p {line-height: 1.5rem;}.', 'C. p {line-height: 1.5;}.', 'D. p {line-height: 1.5in;}.'],
+        ans: 0,
+        exp: '1.5em thiết lập chiều cao dòng bằng 1,5 lần chiều cao dòng hiện thời.'
+      },
+      {
+        q: 'Câu 5. Để thiết lập kiểu chữ nghiêng của văn bản, sử dụng thuộc tính CSS nào?',
+        opts: ['A. font-size.', 'B. font-weight.', 'C. font-style.', 'D. font-family.'],
+        ans: 2,
+        exp: 'Thuộc tính font-style quy định kiểu chữ (normal hoặc italic/italics).'
+      }
+    ];
+
+    const b14TfItems = [
+      { label: 'a) Mẫu CSS áp dụng cho một phần tử sẽ tự động áp dụng cho phần tử con, cháu (trừ ngoại lệ).', ans: true },
+      { label: 'b) Nếu có nhiều mẫu CSS cùng viết cho một bộ chọn thì mẫu viết đầu tiên sẽ được áp dụng.', ans: false },
+      { label: 'c) Mức độ ưu tiên của kí hiệu * là cao nhất.', ans: false },
+      { label: 'd) Thuộc tính text-decoration không có tính kế thừa.', ans: true }
+    ];
+
+    const b14FontClassifyItems = [
+      { key: 'a', name: 'a) Times New Roman', ans: 'serif' },
+      { key: 'b', name: 'b) Courier New', ans: 'monospace' },
+      { key: 'c', name: 'c) Abadi', ans: 'sans-serif' },
+      { key: 'd', name: 'd) Bradley Hand ITC', ans: 'cursive' },
+      { key: 'e', name: 'e) Berlin Sans FB', ans: 'sans-serif' },
+      { key: 'f', name: 'f) ALGERIAN', ans: 'fantasy' },
+      { key: 'g', name: 'g) Consolas', ans: 'monospace' },
+      { key: 'h', name: 'h) Cascadia', ans: 'monospace' }
+    ];
+
+    function renderB14QuizSection() {
+      const mcqBox = document.getElementById('b14-mcq-list');
+      if (mcqBox) {
+        mcqBox.innerHTML = b14McqItems.map((it, i) => `
+          <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2">
+            <p class="font-bold text-xs sm:text-sm text-navy-800">${it.q}</p>
+            <div class="space-y-1">
+              ${it.opts.map((o, oi) => `
+                <label class="flex items-center gap-2 p-2 rounded-xl bg-white border border-slate-200 text-xs font-medium text-navy-800 cursor-pointer">
+                  <input type="radio" name="b14-mcq-${i}" value="${oi}" class="accent-teal-600" />
+                  <span>${o}</span>
+                </label>
+              `).join('')}
+            </div>
+            <div id="b14-mcq-fb-${i}" class="hidden text-xs p-2 rounded-lg font-medium"></div>
+          </div>
+        `).join('');
+      }
+
+      const tfBox = document.getElementById('b14-tf-list');
+      if (tfBox) {
+        tfBox.innerHTML = b14TfItems.map((it, i) => `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <span class="text-xs sm:text-sm font-semibold text-navy-800">${it.label}</span>
+            <div class="flex gap-2 shrink-0">
+              <label class="px-3 py-1 rounded-lg bg-white border border-slate-300 text-xs font-bold text-teal-700 cursor-pointer">
+                <input type="radio" name="b14-tf-${i}" value="true" class="accent-teal-600" /> Đúng
+              </label>
+              <label class="px-3 py-1 rounded-lg bg-white border border-slate-300 text-xs font-bold text-coral-600 cursor-pointer">
+                <input type="radio" name="b14-tf-${i}" value="false" class="accent-coral-500" /> Sai
+              </label>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      const fontBox = document.getElementById('b14-font-classify-list');
+      if (fontBox) {
+        fontBox.innerHTML = b14FontClassifyItems.map((f, i) => `
+          <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-1.5">
+            <div class="text-xs font-extrabold text-navy-800">${f.name}</div>
+            <select id="b14-font-sel-${i}" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs font-bold text-navy-800 bg-slate-50">
+              <option value="">-- Chọn loại phông --</option>
+              <option value="serif">serif (có chân)</option>
+              <option value="sans-serif">sans-serif (không chân)</option>
+              <option value="monospace">monospace (đều rộng)</option>
+              <option value="cursive">cursive (viết tay)</option>
+              <option value="fantasy">fantasy (trừu tượng)</option>
+            </select>
+          </div>
+        `).join('');
+      }
+    }
+
+    function gradeB14Quiz() {
+      let correct = 0;
+      const total = b14McqItems.length + b14TfItems.length + b14FontClassifyItems.length; // 17 ý
+
+      b14McqItems.forEach((it, i) => {
+        const chosen = document.querySelector(`input[name="b14-mcq-${i}"]:checked`);
+        const fb = document.getElementById(`b14-mcq-fb-${i}`);
+        fb.classList.remove('hidden', 'bg-teal-100', 'text-teal-900', 'bg-coral-100', 'text-coral-900');
+        if (chosen && parseInt(chosen.value, 10) === it.ans) {
+          correct++;
+          fb.classList.add('bg-teal-100', 'text-teal-900');
+          fb.textContent = `✔ Đúng: ${it.exp}`;
+        } else {
+          fb.classList.add('bg-coral-100', 'text-coral-900');
+          fb.textContent = `✘ Sai (${it.opts[it.ans]}): ${it.exp}`;
+        }
+      });
+
+      b14TfItems.forEach((it, i) => {
+        const chosen = document.querySelector(`input[name="b14-tf-${i}"]:checked`);
+        if (chosen && (chosen.value === 'true') === it.ans) correct++;
+      });
+
+      b14FontClassifyItems.forEach((f, i) => {
+        const val = document.getElementById(`b14-font-sel-${i}`)?.value;
+        if (val === f.ans) correct++;
+      });
+
+      b14QuizPts = Math.round((correct / total) * 20);
+      document.getElementById('b14-quiz-score').textContent = b14QuizPts;
+      syncB14TotalScore();
+
+      const resBox = document.getElementById('b14-quiz-result-box');
+      if (resBox) {
+        resBox.classList.remove('hidden');
+        resBox.textContent = `✔ Đã chấm Luyện tập Bài 14: ${correct}/${total} ý đúng — Quy đổi: ${b14QuizPts}/20 điểm.`;
+      }
+    }
+
+    function syncB14TotalScore() {
+      const sum = b14LabPts + b14QuizPts;
+      const badge = document.getElementById('b14-total-score-badge');
+      if (badge) badge.textContent = sum;
+      if (typeof window.updateModuleScore === 'function') {
+        window.updateModuleScore('b14Lab', b14LabPts);
+        window.updateModuleScore('b14Quiz', b14QuizPts, null, 'Đang làm bài');
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       initWorksheet1();
       runCssSandbox();
       renderSituations();
       renderPracticeSection();
+      loadB14LabTask(1);
+      renderB14QuizSection();
+      runPriorityDemo();
       const params = new URLSearchParams(window.location.search);
       if (params.get('role') === 'student') {
         const sc = (params.get('scope') || 'all').toLowerCase();
-        if (['tab1', 'tab2', 'tab3'].includes(sc)) {
+        if (['tab1', 'tab2', 'tab3', 'tab14'].includes(sc)) {
           switchTab(sc);
+        } else if (sc === 'tab14_practice') {
+          switchTab('tab14');
+          switchB14SubSection('lab');
         }
       }
     });

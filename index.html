@@ -145,40 +145,46 @@
         <!-- Bộ chuyển đổi Bài 13 / Bài 14 (dành cho Giáo viên) -->
         <div id="lesson-switcher-box" class="flex items-center gap-1.5 bg-navy-900/90 p-1 rounded-xl border border-navy-600 self-start xl:self-center no-print">
           <button type="button" id="btn-switch-b13" onclick="switchLesson('b13')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer bg-teal-600 text-white shadow">
-            Bài 13: Khái niệm & Vai trò
+            Bài 13: Khái niệm &amp; Vai trò CSS
           </button>
           <button type="button" id="btn-switch-b14" onclick="switchLesson('b14')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer text-slate-300 hover:text-white hover:bg-navy-700">
-            Bài 14: Định dạng văn bản
+            Bài 14: Định dạng văn bản CSS
           </button>
         </div>
 
         <!-- Khu vực nút chức năng nhanh (Phân quyền theo role: Giáo viên vs Học sinh QR) -->
         <div class="flex flex-wrap items-center gap-2 self-start xl:self-center no-print">
-          <span>⛶ Toàn màn hình</span>
-        </button>
+          <button type="button" onclick="toggleFullScreen()" class="px-3 py-1.5 rounded-xl bg-navy-700 hover:bg-navy-600 text-white text-xs font-bold border border-navy-600 transition cursor-pointer">
+            ⛶ Toàn màn hình
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Thanh điều hướng Tab (Giáo viên xem đầy đủ; Học sinh QR chỉ xem Phiếu 1, Phiếu 2, Luyện tập, Điểm & Thứ hạng của tôi) -->
-    <nav id="main-nav-tabs" aria-label="Điều hướng phân khu" class="grid grid-cols-2 sm:grid-cols-5 gap-2 mt-3 pt-2.5 border-t border-navy-700">
-      <button onclick="switchTab('tab1')" id="btn-tab1" class="nav-tab active flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl font-bold text-xs transition cursor-pointer bg-teal-600 text-white shadow-md">
-        <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[11px] font-extrabold">1</span>
+    <!-- Thanh điều hướng Tab (Chuẩn hóa theo từng bài: Bài 13 và Bài 14; Học sinh QR chỉ xem mục được mở + Điểm & Thứ hạng của tôi) -->
+    <nav id="main-nav-tabs" aria-label="Điều hướng phân khu" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mt-3 pt-2.5 border-t border-navy-700">
+      <button onclick="switchTab('tab1')" id="btn-tab1" class="nav-tab b13-nav-item active flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl font-bold text-xs transition cursor-pointer bg-teal-600 text-white shadow-md">
+        <span class="px-1.5 py-0.5 rounded bg-white/20 text-[10px] font-extrabold">B13•1</span>
         <span class="truncate">Phiếu số 1 (30đ)</span>
       </button>
-      <button onclick="switchTab('tab2')" id="btn-tab2" class="nav-tab flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl font-bold text-xs transition cursor-pointer bg-navy-700/80 hover:bg-navy-700 text-slate-200">
-        <span class="w-5 h-5 rounded-full bg-white/15 flex items-center justify-center text-[11px] font-extrabold">2</span>
+      <button onclick="switchTab('tab2')" id="btn-tab2" class="nav-tab b13-nav-item flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl font-bold text-xs transition cursor-pointer bg-navy-700/80 hover:bg-navy-700 text-slate-200">
+        <span class="px-1.5 py-0.5 rounded bg-white/15 text-[10px] font-extrabold">B13•2</span>
         <span class="truncate">Phiếu số 2 (30đ)</span>
       </button>
-      <button onclick="switchTab('tab3')" id="btn-tab3" class="nav-tab flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl font-bold text-xs transition cursor-pointer bg-navy-700/80 hover:bg-navy-700 text-slate-200">
-        <span class="w-5 h-5 rounded-full bg-white/15 flex items-center justify-center text-[11px] font-extrabold">3</span>
-        <span class="truncate">Luyện tập (40đ)</span>
+      <button onclick="switchTab('tab3')" id="btn-tab3" class="nav-tab b13-nav-item flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl font-bold text-xs transition cursor-pointer bg-navy-700/80 hover:bg-navy-700 text-slate-200">
+        <span class="px-1.5 py-0.5 rounded bg-white/15 text-[10px] font-extrabold">B13•3</span>
+        <span class="truncate">Luyện tập B13 (40đ)</span>
+      </button>
+      <button onclick="switchTab('tab14')" id="btn-tab14" class="nav-tab b14-nav-item flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl font-bold text-xs transition cursor-pointer bg-navy-700/80 hover:bg-navy-700 text-teal-200 border border-teal-500/30">
+        <span class="px-1.5 py-0.5 rounded bg-teal-600 text-white text-[10px] font-extrabold">B14</span>
+        <span class="truncate">Bài 14: Văn bản CSS</span>
       </button>
       <button onclick="switchTab('tab5')" id="btn-tab5" class="nav-tab flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl font-bold text-xs transition cursor-pointer bg-navy-700/80 hover:bg-navy-700 text-amber-300 border border-amber-400/40">
         <span class="text-sm">🏆</span>
-        <span id="nav-tab5-label" class="truncate">Bảng xếp hạng & Điểm</span>
+        <span id="nav-tab5-label" class="truncate">Bảng xếp hạng &amp; Điểm</span>
       </button>
       <button onclick="switchTab('tab4')" id="btn-tab4" class="nav-tab teacher-only-nav flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl font-bold text-xs transition cursor-pointer bg-navy-700/80 hover:bg-navy-700 text-slate-200">
-        <span class="w-5 h-5 rounded-full bg-coral-500 text-white flex items-center justify-center text-[11px] font-extrabold">4</span>
+        <span class="px-1.5 py-0.5 rounded bg-coral-500 text-white text-[10px] font-extrabold">RV</span>
         <span class="truncate">Rubric (12đ)</span>
       </button>
     </nav>
@@ -216,11 +222,22 @@
         <div class="flex flex-wrap items-center gap-2 shrink-0">
           <label for="teacher-target-scope" class="sr-only">Chọn mục cần tạo phòng</label>
           <select id="teacher-target-scope" class="px-3 py-2.5 rounded-xl border-2 border-navy-700/30 bg-slate-50 text-navy-800 font-extrabold text-xs sm:text-sm focus:outline-none focus:border-teal-600 cursor-pointer">
-            <option value="all">Mục: Cả bài (Phiếu 1 + Phiếu 2 + Luyện tập)</option>
-            <option value="tab1">Mục: Chỉ Phiếu học tập số 1 (30đ)</option>
-            <option value="tab2">Mục: Chỉ Phiếu học tập số 2 (30đ)</option>
-            <option value="tab3">Mục: Chỉ Hoạt động Luyện tập (40đ)</option>
-            <option value="tab14_practice">Mục: Bài 14 • Thực hành & Luyện tập (40đ)</option>
+            <optgroup label="── BÀI 13: KHÁI NIỆM & VAI TRÒ CỦA CSS ──">
+              <option value="b13_all">[Bài 13] Toàn bộ Bài 13 (Phiếu 1 + Phiếu 2 + Luyện tập - 100đ)</option>
+              <option value="tab1">[Bài 13 • Mục 1] Phiếu học tập số 1 – So sánh 3 cách dùng CSS (30đ)</option>
+              <option value="tab2">[Bài 13 • Mục 2] Phiếu học tập số 2 – Sandbox &amp; 3 Tình huống ATM (30đ)</option>
+              <option value="tab3">[Bài 13 • Mục 3] Hoạt động Luyện tập Bài 13 – 11 ý SGK (40đ)</option>
+            </optgroup>
+            <optgroup label="── BÀI 14: ĐỊNH DẠNG VĂN BẢN BẰNG CSS ──">
+              <option value="tab14_all">[Bài 14] Toàn bộ Bài 14 (Khởi động + Thuộc tính + Thực hành + Luyện tập - 40đ)</option>
+              <option value="tab14_warmup">[Bài 14 • Mục 1] Khởi động (Hình 14.1 – SGK tr.76)</option>
+              <option value="tab14_theory">[Bài 14 • Mục 2] Thuộc tính định dạng &amp; Thứ tự ưu tiên CSS</option>
+              <option value="tab14_practice">[Bài 14 • Mục 3] Thực hành NV1 &amp; NV2 (SGK tr.81–82 - 20đ)</option>
+              <option value="tab14_quiz">[Bài 14 • Mục 4] Luyện tập &amp; Phân loại phông chữ (20đ)</option>
+            </optgroup>
+            <optgroup label="── TỔNG HỢP CẢ HAI BÀI ──">
+              <option value="all">[Cả Bài 13 &amp; Bài 14] Mở tất cả các mục</option>
+            </optgroup>
           </select>
           <button onclick="createNewRoom()" class="px-4 py-2.5 bg-teal-600 hover:bg-teal-500 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow transition cursor-pointer">
             ➕ Tạo phòng mới (6 ký tự)
@@ -1195,23 +1212,32 @@ h1 { text-align: left; color: red; }
     const urlParams = new URLSearchParams(window.location.search);
     const paramRoom = (urlParams.get('room') || '').trim().toUpperCase().slice(0, 6);
     const paramRole = (urlParams.get('role') || '').trim().toLowerCase();
-    const validScopes = ['all', 'tab1', 'tab2', 'tab3', 'tab14_practice'];
-    const rawParamScope = (urlParams.get('scope') || 'all').trim().toLowerCase();
-    const paramScope = validScopes.includes(rawParamScope) ? rawParamScope : 'all';
+    const validScopes = [
+      'all',
+      'b13_all', 'tab1', 'tab2', 'tab3',
+      'tab14_all', 'tab14_warmup', 'tab14_theory', 'tab14_practice', 'tab14_quiz'
+    ];
+    const rawParamScope = (urlParams.get('scope') || 'b13_all').trim().toLowerCase();
+    const paramScope = validScopes.includes(rawParamScope) ? rawParamScope : 'b13_all';
     const isQrStudentMode = Boolean(paramRoom && paramRole === 'student');
 
     const SCOPE_META = {
-      all: { label: 'Cả bài (Phiếu 1 + Phiếu 2 + Luyện tập)', maxScore: 100, defaultTab: 'tab1', tabs: ['tab1', 'tab2', 'tab3', 'tab14', 'tab5'] },
-      tab1: { label: 'Chỉ Phiếu học tập số 1 (30đ)', maxScore: 30, defaultTab: 'tab1', tabs: ['tab1', 'tab5'] },
-      tab2: { label: 'Chỉ Phiếu học tập số 2 (30đ)', maxScore: 30, defaultTab: 'tab2', tabs: ['tab2', 'tab5'] },
-      tab3: { label: 'Chỉ Hoạt động Luyện tập (40đ)', maxScore: 40, defaultTab: 'tab3', tabs: ['tab3', 'tab5'] },
-      tab14_practice: { label: 'Bài 14 • Định dạng văn bản CSS (40đ)', maxScore: 40, defaultTab: 'tab14', tabs: ['tab14', 'tab5'] }
+      all: { label: '[Cả Bài 13 & 14] Toàn bộ nội dung', maxScore: 100, defaultTab: 'tab1', subSection: null, tabs: ['tab1', 'tab2', 'tab3', 'tab14', 'tab5'] },
+      b13_all: { label: '[Bài 13] Phiếu 1 + Phiếu 2 + Luyện tập (100đ)', maxScore: 100, defaultTab: 'tab1', subSection: null, tabs: ['tab1', 'tab2', 'tab3', 'tab5'] },
+      tab1: { label: '[Bài 13 • Mục 1] Phiếu học tập số 1 (30đ)', maxScore: 30, defaultTab: 'tab1', subSection: null, tabs: ['tab1', 'tab5'] },
+      tab2: { label: '[Bài 13 • Mục 2] Phiếu học tập số 2 – Sandbox & ATM (30đ)', maxScore: 30, defaultTab: 'tab2', subSection: null, tabs: ['tab2', 'tab5'] },
+      tab3: { label: '[Bài 13 • Mục 3] Hoạt động Luyện tập Bài 13 (40đ)', maxScore: 40, defaultTab: 'tab3', subSection: null, tabs: ['tab3', 'tab5'] },
+      tab14_all: { label: '[Bài 14] Toàn bộ Bài 14 – Định dạng văn bản CSS (40đ)', maxScore: 40, defaultTab: 'tab14', subSection: null, tabs: ['tab14', 'tab5'] },
+      tab14_warmup: { label: '[Bài 14 • Mục 1] Khởi động (Hình 14.1)', maxScore: 40, defaultTab: 'tab14', subSection: 'warmup', tabs: ['tab14', 'tab5'] },
+      tab14_theory: { label: '[Bài 14 • Mục 2] Thuộc tính & Thứ tự ưu tiên CSS', maxScore: 40, defaultTab: 'tab14', subSection: 'theory', tabs: ['tab14', 'tab5'] },
+      tab14_practice: { label: '[Bài 14 • Mục 3] Thực hành NV1 & NV2 (20đ)', maxScore: 40, defaultTab: 'tab14', subSection: 'lab', tabs: ['tab14', 'tab5'] },
+      tab14_quiz: { label: '[Bài 14 • Mục 4] Luyện tập & Phân loại phông chữ (20đ)', maxScore: 40, defaultTab: 'tab14', subSection: 'quiz', tabs: ['tab14', 'tab5'] }
     };
 
     const classroomState = {
       role: isQrStudentMode ? 'student' : 'teacher',
       roomCode: isQrStudentMode ? paramRoom : '',
-      scope: isQrStudentMode ? paramScope : 'all',
+      scope: isQrStudentMode ? paramScope : 'b13_all',
       isLocked: false,
       studentId: '',
       studentName: '',
@@ -1282,7 +1308,7 @@ h1 { text-align: left; color: red; }
     }
 
     function applyStudentAllowedScopeUI() {
-      const scopeKey = validScopes.includes(classroomState.scope) ? classroomState.scope : 'all';
+      const scopeKey = validScopes.includes(classroomState.scope) ? classroomState.scope : 'b13_all';
       const meta = SCOPE_META[scopeKey];
       const allowedTabs = meta.tabs;
 
@@ -1294,6 +1320,79 @@ h1 { text-align: left; color: red; }
         } else {
           navBtn.classList.add('hidden');
         }
+      });
+
+      const navTabs = document.getElementById('main-nav-tabs');
+      if (navTabs) {
+        navTabs.className = allowedTabs.length > 2
+          ? 'grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 pt-2.5 border-t border-navy-700'
+          : 'grid grid-cols-2 gap-2 mt-3 pt-2.5 border-t border-navy-700';
+      }
+
+      const scopeBadge = document.getElementById('student-scope-badge');
+      if (scopeBadge) {
+        scopeBadge.textContent = `Mục được mở: ${meta.label}`;
+      }
+
+      const myMaxEl = document.getElementById('my-max-score');
+      if (myMaxEl) myMaxEl.textContent = meta.maxScore;
+
+      const persMaxEl = document.getElementById('personal-max-score');
+      if (persMaxEl) persMaxEl.textContent = meta.maxScore;
+
+      const cardWs1 = document.getElementById('personal-card-ws1');
+      const cardWs2 = document.getElementById('personal-card-ws2');
+      const cardPrac = document.getElementById('personal-card-practice');
+      const gridBreak = document.getElementById('personal-score-breakdown');
+
+      const showWs1 = ['all', 'b13_all', 'tab1'].includes(scopeKey);
+      const showWs2 = ['all', 'b13_all', 'tab2'].includes(scopeKey);
+      const showPrac = ['all', 'b13_all', 'tab3', 'tab14_all', 'tab14_practice', 'tab14_quiz'].includes(scopeKey);
+
+      if (cardWs1) cardWs1.classList.toggle('hidden', !showWs1);
+      if (cardWs2) cardWs2.classList.toggle('hidden', !showWs2);
+      if (cardPrac) cardPrac.classList.toggle('hidden', !showPrac);
+      if (gridBreak) {
+        const visibleCount = [showWs1, showWs2, showPrac].filter(Boolean).length;
+        gridBreak.className = visibleCount === 3
+          ? 'grid grid-cols-1 sm:grid-cols-3 gap-4'
+          : 'grid grid-cols-1 gap-4';
+      }
+
+      // Nếu học sinh quét QR vào một tiểu mục cụ thể của Bài 14, khóa các tiểu mục khác của Bài 14
+      if (meta.subSection && typeof window.switchB14SubSection === 'function') {
+        window.switchB14SubSection(meta.subSection);
+        ['warmup', 'theory', 'lab', 'quiz'].forEach(subKey => {
+          const subBtn = document.getElementById(`b14-subbtn-${subKey}`);
+          if (subBtn) {
+            subBtn.classList.toggle('hidden', subKey !== meta.subSection);
+          }
+        });
+      } else {
+        ['warmup', 'theory', 'lab', 'quiz'].forEach(subKey => {
+          const subBtn = document.getElementById(`b14-subbtn-${subKey}`);
+          if (subBtn) subBtn.classList.remove('hidden');
+        });
+      }
+
+      // Đảm bảo học sinh chỉ đang ở tab được phép của phòng
+      const activePanel = document.querySelector('.tab-panel.active');
+      if (activePanel && !allowedTabs.includes(activePanel.id) && typeof window.switchTab === 'function') {
+        window.switchTab(meta.defaultTab);
+      }
+    }
+
+    function getScopedStudentTotal(ws1, ws2, prac, scopeKey) {
+      const b14Sum = (classroomState.scores.b14Lab || 0) + (classroomState.scores.b14Quiz || 0);
+      if (scopeKey === 'tab1') return ws1 || 0;
+      if (scopeKey === 'tab2') return ws2 || 0;
+      if (scopeKey === 'tab3') return classroomState.scores.practice || 0;
+      if (scopeKey === 'b13_all') return (ws1 || 0) + (ws2 || 0) + (classroomState.scores.practice || 0);
+      if (scopeKey === 'tab14_all') return b14Sum;
+      if (scopeKey === 'tab14_practice') return classroomState.scores.b14Lab || 0;
+      if (scopeKey === 'tab14_quiz') return classroomState.scores.b14Quiz || 0;
+      return (ws1 || 0) + (ws2 || 0) + (classroomState.scores.practice || 0) + b14Sum;
+    }
       });
 
       const navTabs = document.getElementById('main-nav-tabs');
@@ -1412,7 +1511,7 @@ h1 { text-align: left; color: red; }
 
         document.querySelectorAll('.teacher-only-nav').forEach(el => el.classList.remove('hidden'));
         if (navTabs) {
-          navTabs.className = 'grid grid-cols-2 sm:grid-cols-5 gap-2 mt-3 pt-2.5 border-t border-navy-700';
+          navTabs.className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mt-3 pt-2.5 border-t border-navy-700';
         }
         if (navTab5Label) navTab5Label.textContent = 'Bảng xếp hạng & Điểm';
 
@@ -1533,7 +1632,7 @@ h1 { text-align: left; color: red; }
     window.createNewRoom = async function() {
       if (isQrStudentMode) return;
       const scopeSelect = document.getElementById('teacher-target-scope');
-      const selectedScope = validScopes.includes(scopeSelect?.value) ? scopeSelect.value : 'all';
+      const selectedScope = validScopes.includes(scopeSelect?.value) ? scopeSelect.value : 'b13_all';
       const scopeMeta = SCOPE_META[selectedScope];
 
       const code = generateSixCharRoomCode();
@@ -2048,13 +2147,18 @@ h1 { text-align: left; color: red; }
       const isQrStudent = params.get('role') === 'student';
       const allowedByScope = {
         all: ['tab1', 'tab2', 'tab3', 'tab14', 'tab5'],
+        b13_all: ['tab1', 'tab2', 'tab3', 'tab5'],
         tab1: ['tab1', 'tab5'],
         tab2: ['tab2', 'tab5'],
         tab3: ['tab3', 'tab5'],
-        tab14_practice: ['tab14', 'tab5']
+        tab14_all: ['tab14', 'tab5'],
+        tab14_warmup: ['tab14', 'tab5'],
+        tab14_theory: ['tab14', 'tab5'],
+        tab14_practice: ['tab14', 'tab5'],
+        tab14_quiz: ['tab14', 'tab5']
       };
-      const rawScope = (params.get('scope') || 'all').toLowerCase();
-      const activeScope = allowedByScope[rawScope] ? rawScope : 'all';
+      const rawScope = (params.get('scope') || 'b13_all').toLowerCase();
+      const activeScope = allowedByScope[rawScope] ? rawScope : 'b13_all';
 
       if (isQrStudent) {
         const validTabs = allowedByScope[activeScope];
@@ -2076,6 +2180,26 @@ h1 { text-align: left; color: red; }
         activeBtn.classList.remove('bg-navy-700/80', 'text-slate-200');
         activeBtn.classList.add('bg-teal-600', 'text-white', 'shadow-md');
       }
+
+      // Đồng bộ trạng thái nút Bài 13 / Bài 14 trên header khi chuyển tab
+      const btnB13 = document.getElementById('btn-switch-b13');
+      const btnB14 = document.getElementById('btn-switch-b14');
+      const tagPill = document.getElementById('lesson-tag-pill');
+      const mainTitle = document.getElementById('app-main-title');
+      if (tabId === 'tab14') {
+        currentLessonKey = 'b14';
+        if (tagPill) tagPill.textContent = 'Tin học 12 (KHMT) • Bài 14 (Tiết 30–31)';
+        if (mainTitle) mainTitle.textContent = 'TRẠM TƯƠNG TÁC: ĐỊNH DẠNG VĂN BẢN BẰNG CSS & PHÒNG HỌC TRỰC TUYẾN';
+        if (btnB14) btnB14.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer bg-teal-600 text-white shadow';
+        if (btnB13) btnB13.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer text-slate-300 hover:text-white hover:bg-navy-700';
+      } else if (['tab1', 'tab2', 'tab3'].includes(tabId)) {
+        currentLessonKey = 'b13';
+        if (tagPill) tagPill.textContent = 'Tin học 12 (KHMT) • Bài 13';
+        if (mainTitle) mainTitle.textContent = 'TRẠM TƯƠNG TÁC: KHÁI NIỆM, VAI TRÒ CỦA CSS & PHÒNG HỌC TRỰC TUYẾN';
+        if (btnB13) btnB13.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer bg-teal-600 text-white shadow';
+        if (btnB14) btnB14.className = 'px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer text-slate-300 hover:text-white hover:bg-navy-700';
+      }
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -3108,12 +3232,20 @@ p {
       runPriorityDemo();
       const params = new URLSearchParams(window.location.search);
       if (params.get('role') === 'student') {
-        const sc = (params.get('scope') || 'all').toLowerCase();
-        if (['tab1', 'tab2', 'tab3', 'tab14'].includes(sc)) {
+        const sc = (params.get('scope') || 'b13_all').toLowerCase();
+        if (['tab1', 'tab2', 'tab3'].includes(sc)) {
           switchTab(sc);
-        } else if (sc === 'tab14_practice') {
+        } else if (sc.startsWith('tab14')) {
           switchTab('tab14');
-          switchB14SubSection('lab');
+          const subMap = {
+            tab14_warmup: 'warmup',
+            tab14_theory: 'theory',
+            tab14_practice: 'lab',
+            tab14_quiz: 'quiz'
+          };
+          if (subMap[sc]) {
+            switchB14SubSection(subMap[sc]);
+          }
         }
       }
     });
